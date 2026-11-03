@@ -315,6 +315,49 @@ export function ResearchProvider({ children }: { children: React.ReactNode }) {
           }
         }
 
+                // Fallback: The Guardian Open Platform when GDELT is rate-limited
+        const guardianKey = (import.meta as any).env?.VITE_GUARDIAN_API_KEY;
+        if (guardianKey) {
+          try {
+            const dayMap: Record<string, number> = { '24h': 1, '3d': 3, '7d': 7, '14d': 14, '1m': 30, '2m': 60, '3m': 90 };
+            const from = new Date(Date.now() - (dayMap[ts] ?? 7) * 86400000).toISOString().slice(0, 10);
+            const gq = country
+              ? `(protest OR demonstration OR strike) AND "${country}"`
+              : '(protest OR demonstration OR strike OR "student protest")';
+            const gUrl = `https://content.guardianapis.com/search?q=${encodeURIComponent(gq)}&from-date=${from}&order-by=newest&page-size=50&api-key=${guardianKey}`;
+            const gResp = await fetch(gUrl);
+            const gJson = await gResp.json();
+            const results = gJson?.response?.results;
+            if (gResp.ok && Array.isArray(results)) {
+              const nowIso = new Date().toISOString();
+              const gLeads = results.map((a: any): NewsArticleLead => ({
+                id: `guardian_${a.id}`,
+                title: a.webTitle,
+                publisher: 'The Guardian',
+                articleUrl: a.webUrl,
+                publicationDate: a.webPublicationDate,
+                retrievalDate: nowIso,
+                searchQuery: gq,
+                country: country || null,
+                language: 'en',
+                associatedEventId: null,
+                verificationStatus: 'unverified',
+                reviewerNotes: null,
+                recordType: 'News-derived event lead',
+                clusterId: `guardian_${a.id}`,
+                duplicateCount: 1,
+                corroboratingArticles: [],
+              }));
+              await ResearchRepository.saveNewsLeads(gLeads);
+              setNewsLeads(gLeads);
+              setNewsStatus({ loading: false, connectionStatus: 'connected', lastSuccessfulRetrieval: nowIso, lastSearchQuery: gq, timespan: ts, error: null });
+              return;
+            }
+          } catch {
+            // fall through to the normal rate-limit notice
+          }
+        }
+
         // Transparently report rate limit or upstream error without fabricating articles
         const statusType = data.connectionStatus === 'rate_limited' ? 'rate_limited' : 'error';
         const errMessage =
