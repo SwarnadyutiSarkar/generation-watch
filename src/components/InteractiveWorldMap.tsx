@@ -54,7 +54,11 @@ export const InteractiveWorldMap: React.FC<InteractiveWorldMapProps> = ({
     });
 
     // Clean publication-grade CartoDB Positron / OSM base tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    const cartoKey = (import.meta as any).env?.VITE_CARTO_KEY;
+    const tileUrl = cartoKey
+      ? `https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${cartoKey}`
+      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    L.tileLayer(tileUrl, {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
