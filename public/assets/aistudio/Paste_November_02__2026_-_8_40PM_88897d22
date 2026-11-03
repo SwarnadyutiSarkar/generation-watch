@@ -1,0 +1,943 @@
+# BUILD GENERATION WATCH — A GLOBAL PROTEST & YOUTH MOVEMENT RESEARCH INTELLIGENCE PLATFORM
+
+Act as a senior full-stack engineer, data engineer, data visualisation specialist, political science researcher and UX designer.
+
+Build a complete, functional, responsive web application called **GENERATION WATCH**.
+
+Tagline: **Understand the movements shaping our world.**
+
+This is an independent, global research and educational platform dedicated to documenting protest movements, demonstrations, youth-led movements, political mobilisation and their social, economic and political context.
+
+This must be a real data-driven research platform, NOT a fictional dashboard, static mockup, generic admin panel or AI-generated news website.
+
+Do not merely provide a plan or code snippets. Build the application and its working functionality.
+
+---
+
+# 1. CORE PURPOSE
+
+Generation Watch should help people investigate:
+
+1. What happened during a protest or social movement?
+2. Where and when did it happen?
+3. What caused it? What were the immediate triggers and deeper historical conditions?
+4. Who participated, and was the movement demonstrably youth-led?
+5. What were the movement's demands?
+6. How did the government and other institutions respond?
+7. What were the human consequences?
+8. Did the movement achieve its objectives?
+9. What can we learn by comparing it with other historical movements?
+10. What socioeconomic and political conditions might influence future mobilisation?
+
+The platform must cover countries around the world, not just India, the United States or Europe.
+
+The platform should distinguish clearly between:
+
+- Individual protest events.
+- Organised protest campaigns.
+- Youth-led movements.
+- Student movements.
+- Labour movements.
+- General public demonstrations.
+- Riots and violent demonstrations.
+- Civil resistance campaigns.
+
+Never automatically classify every protest as a youth movement.
+
+---
+
+# 2. TECHNOLOGY STACK
+
+Build a full-stack application.
+
+Frontend:
+- React.
+- JavaScript.
+- Modern CSS.
+- Responsive layout.
+- Leaflet for interactive maps.
+- Apache ECharts or Recharts for charts.
+- Lucide icons.
+
+Backend:
+- Node.js.
+- Express.
+- Server-side API routes for external data.
+- Data normalisation and validation.
+- Error handling and caching.
+
+Data processing:
+- JavaScript for API ingestion and CSV processing.
+- Python-compatible architecture for future statistical forecasting.
+- PapaParse or an equivalent CSV parser.
+
+Storage:
+- Use IndexedDB for locally imported research datasets so the user can retain uploaded CSV data between sessions.
+- Keep a clean data-access layer so a persistent PostgreSQL or Supabase database can be added later.
+- Do not require paid database services for the initial version.
+
+IMPORTANT:
+- Do not require Groq.
+- Do not require an OpenAI API key.
+- Do not require a Gemini API key inside the application.
+- Do not call an LLM to invent protest records, casualty figures, causes or forecasts.
+- The application itself must work without any AI inference API.
+
+Do not expose secrets in frontend code.
+
+---
+
+# 3. REAL DATA SOURCES — USE THESE FIRST
+
+Use only accessible, authentic sources.
+
+Do not invent API endpoints. Verify endpoint responses before implementing integrations.
+
+## A. Mass Mobilization Protest Data — Harvard Dataverse
+
+Dataset:
+https://doi.org/10.7910/DVN/HTTWYL
+
+This dataset contains approximately 17,145 observations of protests against governments, covering 1990 to March 2020.
+
+It is publicly downloadable and carries a CC0 1.0 public-domain dedication.
+
+Requirements:
+- Create a dataset import interface.
+- Allow the user to upload the original CSV file.
+- Support tab-delimited files if necessary.
+- Read and inspect the actual headers.
+- Map the source columns to the application's internal schema.
+- Preserve the original fields.
+- Do not assume that column names are identical to your proposed schema.
+- Display the dataset's historical coverage accurately.
+- Cite Clark and Regan and the Harvard Dataverse DOI.
+
+The application must not pretend the historical dataset contains events after March 2020.
+
+## B. NAVCO — Harvard Ash Center
+
+Official project:
+https://ash.harvard.edu/programs/nonviolent-and-violent-campaigns-and-outcomes-data-project/
+
+Dataset coverage:
+1900–2021, approximately 627 campaigns worldwide.
+
+Purpose:
+- Study characteristics of resistance campaigns.
+- Examine nonviolent and violent campaigns.
+- Investigate campaign outcomes.
+- Compare historical mobilisation strategies and results.
+
+Allow CSV upload and schema inspection.
+
+Treat NAVCO as a campaign-level historical dataset, not a database of every protest demonstration.
+
+Cite the NAVCO project and its original dataset.
+
+## C. GDELT DOC 2.0 API — Current news discovery
+
+Official documentation:
+https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/
+
+API base:
+https://api.gdeltproject.org/api/v2/doc/doc
+
+Use GDELT to discover recently published news articles concerning protests, demonstrations, student movements, strikes and civil unrest.
+
+Use its article-list mode and JSON output where supported.
+
+Build queries using relevant search terms, for example:
+
+- protest OR demonstration
+- student protest
+- youth movement
+- student movement
+- mass mobilisation
+- general strike
+- civil unrest
+- anti-government demonstration
+
+Implement:
+- Date range or timespan selection within GDELT's documented search limits.
+- Country-related keyword filtering.
+- Search by topic.
+- Article title.
+- Publisher/domain.
+- Publication date.
+- Original article URL.
+- Search timestamp.
+- Search query used.
+
+GDELT's DOC API searches recent news coverage, with its documented time range limited to the most recent three months.
+
+IMPORTANT:
+GDELT is a news discovery source, not a verified protest-event database.
+
+Do not:
+- Count every article as a separate protest.
+- Treat an article headline as proof that an event occurred.
+- Infer casualty numbers from news volume.
+- Claim that GDELT independently verifies an event.
+- Present news coverage volume as actual protest frequency.
+
+Group obvious duplicate coverage carefully, retaining links to individual articles.
+
+Label the feed:
+
+"News-derived event leads — independently verify before treating as confirmed events."
+
+## D. World Bank Open Data API
+
+Official API documentation:
+https://datahelpdesk.worldbank.org/knowledgebase/articles/889392
+
+Website:
+https://data.worldbank.org/
+
+Use the official World Bank API for country-level socioeconomic indicators.
+
+Investigate and implement relevant indicators, including:
+
+- Youth unemployment.
+- Total unemployment.
+- Inflation.
+- GDP growth.
+- GDP per capita.
+- Poverty.
+- Population.
+- Urban population.
+- Education-related indicators where available.
+
+Examples of useful World Bank indicator codes:
+
+- SL.UEM.1524.ZS — Unemployment, ages 15–24.
+- FP.CPI.TOTL.ZG — Inflation, consumer prices.
+- NY.GDP.MKTP.KD.ZG — GDP growth.
+- NY.GDP.PCAP.CD — GDP per capita.
+- SP.POP.TOTL — Total population.
+
+Use the actual API response, not invented values.
+
+Requirements:
+- Show the indicator name.
+- Show its unit.
+- Show the observation year.
+- Show the country.
+- Show the source.
+- Show the last available observation.
+- Handle countries with missing or outdated observations.
+- Do not assume all countries have data for the same year.
+
+Never substitute a missing value with zero.
+
+## E. Optional future sources
+
+Prepare an extensible source registry for:
+
+- V-Dem: https://www.v-dem.net/
+- FAOSTAT: https://www.fao.org/faostat/
+- Other public academic and government datasets.
+
+Do not invent their API endpoints or integrate them using unverified assumptions.
+
+Prioritise the four sources above.
+
+---
+
+# 4. DATA INTEGRITY — NON-NEGOTIABLE
+
+This is the most important section.
+
+There must be NO fabricated statistics, fake protest records, invented casualties, fictional countries, fake article links or artificial forecast values.
+
+Every data record must carry as much of the following metadata as the source provides:
+
+- Source name.
+- Source URL.
+- Dataset name.
+- Original record identifier.
+- Event date.
+- Publication date, where applicable.
+- Retrieval timestamp.
+- Country.
+- Geographic location.
+- Event category.
+- Reported fatalities.
+- Reported injuries.
+- Arrests.
+- Displacement.
+- Source notes.
+- Data confidence or verification status.
+- Licence and attribution information.
+
+Use these distinct data labels:
+
+1. Historical dataset record.
+2. News-derived event lead.
+3. Independently verified research record.
+4. Reported statistic.
+5. Estimated statistic.
+6. Modelled indicator.
+7. Statistical projection.
+
+Never merge different categories without retaining their original provenance.
+
+For casualty statistics:
+- Keep deaths, injuries, missing persons, arrests and displaced people separate.
+- Distinguish confirmed and reported figures where possible.
+- Preserve the reporting source and date.
+- Do not convert missing data to zero.
+- Do not silently add figures from different reports together.
+- If reports disagree, display the disagreement.
+
+For event verification:
+- A news article alone does not automatically make a protest independently verified.
+- Provide a verification status and allow the researcher to review the record.
+- Allow the researcher to mark a record as reviewed, corroborated, conflicting or unverified.
+- Keep the original source links.
+
+If an API fails, display an informative error and the last successful retrieval timestamp.
+
+If no data is available, show "Data unavailable" rather than fictional data.
+
+Never show a fake live-data indicator.
+
+---
+
+# 5. WEBSITE DESIGN AND VISUAL IDENTITY
+
+Design a sophisticated global research publication.
+
+The aesthetic should feel like a combination of:
+- An international research institute.
+- A global affairs publication.
+- A modern investigative data journalism platform.
+
+Avoid the appearance of a generic SaaS admin dashboard.
+
+Design direction:
+- Deep navy, charcoal and warm off-white.
+- Muted red as a restrained accent.
+- Subtle grey dividers.
+- Strong editorial typography.
+- Large, readable research headings.
+- Spacious layouts.
+- Clean data visualisations.
+- Professional interactive maps.
+- Clear source citations.
+
+Do not overcrowd the screen.
+
+Use an elegant, responsive navigation system.
+
+Brand:
+GENERATION WATCH
+
+Subtitle:
+Global Protest & Youth Movement Observatory.
+
+Main navigation:
+
+1. Overview
+2. Global Map
+3. Movement Explorer
+4. Country Profiles
+5. Human Impact
+6. Historical Archive
+7. Research & Outlook
+8. Data Sources
+
+---
+
+# 6. PAGE ONE — GLOBAL OVERVIEW
+
+Create a global intelligence overview.
+
+It should include:
+
+A. Global map
+- Interactive world map.
+- Country-level geographic exploration.
+- Markers only for records with usable geographic coordinates.
+- Different marker styles for historical records and current news-derived leads.
+- Click a marker to open its event details.
+- Filters for date, country, category and data source.
+
+Do not invent coordinates or place all events at country capitals.
+
+If an event only has country-level location, show it at country level rather than pretending to know its city.
+
+B. Research indicators
+
+Display:
+- Historical records available.
+- News articles retrieved.
+- Countries represented.
+- Historical period covered.
+- Most recent successful data retrieval.
+- Number of records awaiting verification.
+
+Only calculate these figures from actual loaded data.
+
+C. Global trends
+
+Include:
+- Historical protest records by year.
+- Distribution by event category where supported.
+- Regional distribution.
+- Country comparison.
+- Major issue categories.
+
+Every chart must explain what is counted and which dataset is being used.
+
+Do not mix news article counts with protest-event counts.
+
+D. Latest news-derived leads
+
+Show recently retrieved GDELT articles with:
+- Headline.
+- Country or location when identifiable.
+- Publisher.
+- Publication time.
+- Original source link.
+- Verification status.
+
+---
+
+# 7. PAGE TWO — GLOBAL MAP
+
+Build a full-screen interactive world map.
+
+Features:
+- Search by country.
+- Select a time period.
+- Select a data source.
+- Filter protest, demonstration, strike, student movement and other supported categories.
+- Historical event layer.
+- Current news-lead layer.
+- Country-level summaries.
+- Clickable markers.
+- Map legend.
+- Loading and error states.
+
+Provide a clear visual distinction between:
+- Historical observations.
+- News-derived leads.
+- Researcher-reviewed records.
+
+Include a map-side research panel showing the selected country's records.
+
+Never use fabricated coordinates.
+
+---
+
+# 8. PAGE THREE — MOVEMENT EXPLORER
+
+Allow users to search for a movement or event.
+
+Each movement page should support this research structure:
+
+1. Overview.
+2. Historical background.
+3. Immediate trigger.
+4. Underlying causes.
+5. Main demands.
+6. Participants and leadership.
+7. Youth participation and evidence.
+8. Government response.
+9. Human impact.
+10. Timeline.
+11. Outcomes.
+12. Long-term consequences.
+13. Related movements.
+14. Sources and further reading.
+
+Important:
+Do not automatically generate these narratives from incomplete CSV rows.
+
+For the first version, allow the researcher to create and edit movement research profiles manually.
+
+Create an editorial research form where the user can add:
+- Movement name.
+- Country.
+- Start and end dates.
+- Background.
+- Immediate trigger.
+- Main demands.
+- Leadership and participating groups.
+- Youth involvement evidence.
+- Government response.
+- Human impact.
+- Outcome.
+- Source URLs.
+- Publication and verification status.
+
+Store and display these as researcher-authored research records.
+
+Do not invent a movement's history just to fill a page.
+
+---
+
+# 9. PAGE FOUR — COUNTRY PROFILES
+
+Create a global country directory.
+
+Every country profile should include:
+
+A. Country overview
+- Country name.
+- Region.
+- Population, where available.
+- Relevant economic indicators.
+- Last data update.
+
+B. Historical protest activity
+- Number of historical dataset records.
+- Timeline of recorded events.
+- Available categories.
+- Relevant movements.
+
+C. Socioeconomic context
+- Youth unemployment.
+- Inflation.
+- GDP growth.
+- Poverty.
+- Other available indicators.
+
+D. Research questions
+- What major grievances have appeared historically?
+- Which movements have shaped the country?
+- What policy changes followed?
+- Which indicators are missing?
+
+E. Source transparency
+- Indicator sources.
+- Observation years.
+- Data gaps.
+- Research references.
+
+Do not imply that economic indicators caused an individual protest without supporting evidence.
+
+---
+
+# 10. PAGE FIVE — HUMAN IMPACT
+
+Build a dedicated human-impact research page.
+
+Categories:
+- Fatalities.
+- Injuries.
+- Arrests.
+- Missing persons.
+- Displacement.
+- Property damage.
+- Internet shutdowns, where documented.
+- Educational disruption.
+- Economic disruption.
+
+Allow filtering by:
+- Country.
+- Movement.
+- Year.
+- Impact type.
+- Source.
+
+Each displayed figure must include:
+- Its source.
+- Date of reporting.
+- Whether confirmed, reported or estimated.
+- Definition used by the source.
+
+If no reliable information exists, display "Not reported in the available sources."
+
+Do not generate casualty estimates using AI or assumptions.
+
+Do not present the sum of multiple conflicting reports as a verified total.
+
+---
+
+# 11. PAGE SIX — HISTORICAL ARCHIVE
+
+Build an archive of global movements and campaigns.
+
+Use:
+- Mass Mobilization dataset.
+- NAVCO dataset.
+- Researcher-authored movement profiles.
+
+Features:
+- Timeline from 1900 onward, where the relevant dataset supports it.
+- Search by country.
+- Search by movement name.
+- Filter by campaign type.
+- Compare historical movements.
+- Display outcomes where supported by the source.
+
+Create a comparison interface.
+
+Users should be able to compare two or more movements by:
+- Country.
+- Period.
+- Campaign type.
+- Main demands.
+- Duration.
+- Participation, if available.
+- Outcome.
+- Historical context.
+
+Never infer missing fields from the movement name.
+
+Explain that the historical datasets have different units of observation and definitions.
+
+---
+
+# 12. PAGE SEVEN — RESEARCH & OUTLOOK
+
+This section should contain evidence-based statistical analysis.
+
+Do not use an LLM to predict protests or uprisings.
+
+Start with descriptive and exploratory analysis.
+
+Implement:
+
+A. Historical trend analysis
+- Annual event counts from the selected historical dataset.
+- Country comparisons.
+- Regional comparisons.
+- Changes over time.
+
+B. Socioeconomic comparison
+- Compare historical protest records with youth unemployment, inflation and other indicators.
+- Use only matching country-year observations.
+- Clearly state how many observations are available.
+- Show missing-data coverage.
+- Avoid claiming causation from correlation.
+
+C. Campaign outcomes
+- Explore NAVCO campaign characteristics and outcomes.
+- Compare patterns between nonviolent and violent campaigns where the source supports this.
+- Explain the limits of the dataset.
+
+D. Future development architecture
+
+Prepare the application for future forecasting models.
+
+Potential future work:
+- Country-year panel analysis.
+- Time-series models.
+- Logistic regression for carefully defined historical outcomes.
+- Walk-forward validation.
+- Uncertainty intervals.
+- Model comparison.
+
+Do not show forecasts until a genuine model has been implemented and validated.
+
+Do not display invented risk scores, probability percentages or future protest dates.
+
+For now, show a research section titled:
+
+"Future Outlook: Evidence and Limitations"
+
+Explain what additional data would be needed before a responsible predictive model could be developed.
+
+Never identify individuals or predict specific participants, organisers or targets.
+
+---
+
+# 13. PAGE EIGHT — DATA SOURCES
+
+Build a transparent data-source registry.
+
+Each source card should show:
+
+- Dataset name.
+- Organisation.
+- Official URL.
+- Dataset coverage.
+- Data type.
+- Licence or access conditions.
+- Retrieval method.
+- Last successful retrieval.
+- Update frequency, where documented.
+- Known limitations.
+
+Include:
+1. Harvard Mass Mobilization.
+2. Harvard NAVCO.
+3. GDELT.
+4. World Bank Open Data.
+
+Include a dataset import area for CSV files.
+
+The import interface should:
+- Accept CSV and TSV.
+- Preview rows.
+- Display column names.
+- Allow field mapping.
+- Validate data types.
+- Identify missing values.
+- Identify duplicate records.
+- Show import errors.
+- Require confirmation before saving.
+- Preserve original data and source metadata.
+
+Do not silently discard records.
+
+Do not overwrite an existing dataset without confirmation.
+
+---
+
+# 14. DATA MODEL
+
+Create a consistent internal data model.
+
+Suggested entities:
+
+COUNTRIES
+- id
+- iso_code
+- country_name
+- region
+
+DATASETS
+- id
+- dataset_name
+- provider
+- source_url
+- licence
+- coverage_start
+- coverage_end
+- retrieval_method
+
+EVENT_RECORDS
+- id
+- source_record_id
+- dataset_id
+- country_id
+- event_name
+- event_date
+- event_type
+- location_name
+- latitude
+- longitude
+- fatalities
+- injuries
+- arrests
+- missing_persons
+- displaced_persons
+- source_url
+- source_notes
+- verification_status
+- record_type
+
+MOVEMENT_PROFILES
+- id
+- name
+- country_id
+- start_date
+- end_date
+- background
+- immediate_trigger
+- underlying_causes
+- demands
+- participants
+- youth_involvement_evidence
+- government_response
+- human_impact
+- outcomes
+- research_status
+
+NEWS_ARTICLES
+- id
+- title
+- publisher
+- article_url
+- publication_date
+- retrieval_date
+- search_query
+- country
+- associated_event_id
+- verification_status
+
+COUNTRY_INDICATORS
+- id
+- country_id
+- indicator_code
+- indicator_name
+- year
+- value
+- unit
+- source_url
+- retrieval_date
+
+Use a flexible schema if the source datasets have different fields.
+
+Keep raw source records separately from normalised records.
+
+---
+
+# 15. BACKEND API ROUTES
+
+Create clean backend routes, for example:
+
+GET /api/health
+
+GET /api/news
+GET /api/news/status
+
+GET /api/worldbank/countries
+GET /api/worldbank/indicators
+
+GET /api/events
+GET /api/events/:id
+
+GET /api/countries
+GET /api/countries/:id
+
+GET /api/movements
+GET /api/movements/:id
+
+POST /api/import/preview
+POST /api/import/confirm
+
+GET /api/datasets
+GET /api/data-status
+
+Implement pagination, validation, caching, error handling and rate-limit awareness.
+
+Do not expose external API credentials in the browser.
+
+Do not make excessive repeated requests to GDELT or the World Bank.
+
+---
+
+# 16. RESEARCH ETHICS AND POLITICAL NEUTRALITY
+
+Generation Watch is a nonpartisan research platform.
+
+It must:
+- Present sources and competing accounts where available.
+- Distinguish allegations from established findings.
+- Avoid politically loaded language.
+- Avoid describing a protest as violent solely because some participants or separate actors engaged in violence.
+- Avoid equating peaceful demonstration with riot.
+- Avoid assuming all protesters have identical demands.
+- Avoid treating government statements as automatically verified.
+- Avoid treating activist accounts as automatically verified.
+- Avoid publishing personally identifying information about ordinary participants.
+- Avoid tracking individuals, organisers or private groups.
+- Avoid targeted predictions of future demonstrations.
+
+Use neutral descriptions and transparent definitions.
+
+---
+
+# 17. USER EXPERIENCE
+
+Make the website genuinely usable.
+
+Requirements:
+- Responsive desktop, tablet and mobile layouts.
+- Working search.
+- Functional filters.
+- Functional date controls.
+- Working country selector.
+- Working map interactions.
+- Loading states.
+- Empty states.
+- API failure states.
+- Dataset import feedback.
+- Clear chart legends.
+- Accessible colour contrast.
+- Keyboard-friendly navigation.
+- Readable source citations.
+
+No decorative controls that do nothing.
+
+No fake buttons.
+
+No nonfunctional filters.
+
+No empty dashboard cards filled with placeholder numbers.
+
+---
+
+# 18. TESTING AND ACCEPTANCE CRITERIA
+
+Before declaring the application complete:
+
+1. Start the application successfully.
+2. Check that all pages load.
+3. Test the backend health endpoint.
+4. Test the GDELT connection.
+5. Test the World Bank API integration.
+6. Test CSV upload and preview.
+7. Test dataset field mapping.
+8. Test missing-value handling.
+9. Test country filters.
+10. Test the map.
+11. Test charts with actual imported data.
+12. Test API failure handling.
+13. Test mobile responsiveness.
+14. Check that no sample or fabricated statistics appear in the user interface.
+15. Check that all external source links work.
+
+If a source cannot be connected or a dataset cannot be downloaded automatically, do not pretend it succeeded.
+
+Instead:
+- Implement the import mechanism.
+- Show the exact dataset download link.
+- Explain what file the user needs.
+- Show the source's current connection status.
+- Keep the rest of the application functional.
+
+Provide a concise README with setup instructions, architecture, data-source details and limitations.
+
+---
+
+# 19. DEVELOPMENT PRIORITY
+
+Build in this order:
+
+1. Complete the responsive application structure.
+2. Build the data-source registry.
+3. Implement GDELT news discovery.
+4. Implement World Bank indicators.
+5. Build CSV upload and import for Mass Mobilization.
+6. Build CSV upload and import for NAVCO.
+7. Implement the map and event explorer.
+8. Implement country profiles.
+9. Implement movement research pages.
+10. Implement human-impact research.
+11. Implement historical analysis.
+12. Implement the research and outlook section.
+13. Test everything.
+
+Do not stop after creating the homepage.
+
+Do not replace real integrations with mock JSON.
+
+Do not create a fictional dataset to make the charts look populated.
+
+If an integration requires a manual dataset upload, finish the upload workflow instead of pretending the data is already available.
+
+---
+
+# FINAL INSTRUCTION
+
+Build Generation Watch as a credible global research platform.
+
+The application must prioritise:
+- Authentic data.
+- Transparent methodology.
+- Historical context.
+- Human consequences.
+- Reliable source attribution.
+- Functional data exploration.
+- Responsible statistical analysis.
+
+The final result should look and behave like a serious international research observatory, not a school project or a generic dashboard.
+
+Start building the application now. Do not respond with a plan alone.

@@ -1,0 +1,6 @@
+{
+  "name": "Generation Watch",
+  "description": "Independent global research and educational observatory documenting protest movements, youth-led mobilisation, civil resistance campaigns, and socioeconomic context.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
